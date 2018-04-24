@@ -1,20 +1,26 @@
 # pre-message
 
-FIXME: description
+pre-message is the server of an encrypted messaging application. It is written in Clojure to take advantage of its interoperability with Java, its functional paradigm and its LISP macros. It uses a re-encryption proxy to distribute de message between users, the proxy uses an AFGH scheme, by using the NICS Crypto library.
+
+This server is just a proof of concept, it uses a mock sqlite3 database and may not be ready for production usage.
 
 ## Installation
 
-Download from http://example.com/FIXME.
+Clone this repository and compile with leiningen to an uberjar:
+
+```
+lein uberjar
+```
 
 ## Usage
 
-FIXME: explanation
+After compilation the project will be compiled in the target directory. To run use the java runtime environment. Java should be 9 or greater. It is necessary to add the `java.xml.bind` module.
 
-    $ java -jar pre-message-0.1.0-standalone.jar [args]
+    $ java --add-modules java.xml.bind -jar target/uberjar/pre-message-0.1.0-standalone.jar [args]
 
 ## Options
 
-FIXME: listing of options this app accepts.
+...
 
 ## Examples
 
@@ -24,13 +30,6 @@ FIXME: listing of options this app accepts.
 
 ...
 
-### Any Other Sections
-### That You Think
-### Might be Useful
-
 ## License
 
-Copyright © 2018 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License either version 1.0
