@@ -8,8 +8,11 @@
 (defmacro mac-global []
   (time (str (AFGHGlobalParameters. rBits qBits))))
 
+;; String that represents the global parameters
+(def global-str (mac-global))
+
 ;; Global parameters.
-(time (def global (AFGHGlobalParameters. (mac-global))))
+(time (def global (AFGHGlobalParameters. global-str)))
 
 ;; Re-encryption function.
 (defn reencrypt [c rk]

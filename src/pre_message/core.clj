@@ -1,37 +1,33 @@
 (ns pre-message.core
-  (:require [compojure.core :refer :all]
-            [org.httpkit.server :refer [run-server]]
-            [pre-message.controller :as c]
-            [clojure.string :as s])
+  (:require [compojure.core         :refer :all]
+            [org.httpkit.server     :refer [run-server]]
+            [pre-message.controller :as     c]
+            [ring.middleware.params :refer [wrap-params]]
+            [clojure.string         :as     s])
   (:gen-class))
 
-; Transform a query to a map
-(defn query->map [query]
-  (reduce (fn [acc [k v]]
-            (assoc acc (keyword k) v))
-          {}
-          (partition 2
-                     (s/split query #"[=&]"))))
-
 ; Define the server router
-(defroutes app
+(defroutes router
   (GET  "/"               []
        (c/global))
 
-  (GET  "/sincronize/:id" [id :as {q :query-string}]
-      (c/sinc-group id (:order (query->map q))))
+  (GET  "/sincronize/:chat" [chat order]
+      (c/sinc-group chat order))
 
-  (POST "/add-user/:id"   [id phone]
-      (c/user->group id phone))
+  (POST "/add-user/:chat"   [chat phone]
+      (c/user->group chat phone))
 
-  (POST "/send/:id"       [id text]
-      (c/message->group id text))
+  (POST "/send/:chat"       [text group sender]
+      (c/message->group text group sender))
 
   (PUT  "/new-user"       [uname phone pk]
       (c/new-user uname phone pk))
 
-  (PUT  "/new-group"      [admin & others]
-      (c/new-group admin others)))
+  (PUT  "/new-group"      [admin-ph :as {all :params}]
+      (c/new-group admin-ph (vals all))))
+
+; Wraps the router in the middleware that allows parameter destructuring
+(def app (wrap-params router))
 
 ; Main function. Starts the server in port 8080
 (defn -main [& args]
