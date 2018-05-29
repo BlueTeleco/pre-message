@@ -23,8 +23,8 @@
   (PUT  "/new-user"       [uname phone pk]
       (c/new-user uname phone pk))
 
-  (PUT  "/new-group"      [admin-ph :as {all :params}]
-      (c/new-group admin-ph (vals all))))
+  (PUT  "/new-group"      [admin-ph gname]
+      (c/new-group admin-ph gname)))
 
 ; Wraps the router in the middleware that allows parameter destructuring
 (def app (wrap-params router))

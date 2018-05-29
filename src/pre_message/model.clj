@@ -28,10 +28,10 @@
     (values {:name uname, :phone phone, :pubkey pk})))
 
 ; Insert new group in the database
-(defn add-group! [admin-ph]
+(defn add-group! [admin-ph gname]
   (let [admin (:id (select-user-phone admin-ph))]
     (insert Chats
-      (values {:admin admin}))))
+      (values {:admin admin, :name gname}))))
 
 ; Insert relationship in the database representing a new user
 ; in the specified group

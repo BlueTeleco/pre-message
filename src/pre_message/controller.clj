@@ -12,9 +12,8 @@
        (str "New user!! Hello " uname "\n")))
 
 ;; Create new group
-(defn new-group [admin & users]
-  (and (m/add-group! admin)
-       (map m/add2group! users)
+(defn new-group [admin gname]
+  (and (m/add-group! admin gname)
        (str "New group!! " admin " is Admin\n")))
 
 ;; Add new user to a certain group
