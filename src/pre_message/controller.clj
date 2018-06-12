@@ -6,6 +6,12 @@
 (defn global []
   afgh/global-str)
 
+;; Get chats from user
+(defn chats [phone]
+  (apply str
+    (map #(str "" (:id %) ":" (:name %) "-")
+         (m/select-chats phone))))
+
 ;; Create new user
 (defn new-user [uname phone pk]
   (and (m/add-user! uname phone pk)

@@ -5,11 +5,16 @@
 ;;; Database
 (defdb db (sqlite3 {:db "resources/db/messages.db"}))
 
+;;; Declare before usage
+(declare Chats ChatMembers)
+
 ;;; Entities
 (defentity Users)
 (defentity ReEncryptionKeys)
-(defentity Chats)
-(defentity ChatMembers)
+(defentity Chats
+  (has-many ChatMembers {:fk :chat}))
+(defentity ChatMembers
+  (belongs-to Chats {:fk :chat}))
 (defentity Messages)
 
 ;;; Utilities
@@ -29,9 +34,11 @@
 
 ; Insert new group in the database
 (defn add-group! [admin-ph gname]
-  (let [admin (:id (select-user-phone admin-ph))]
-    (insert Chats
-      (values {:admin admin, :name gname}))))
+  (let [admin (:id (select-user-phone admin-ph))
+        chat  (insert Chats
+                (values {:admin admin, :name gname}))]
+    (insert ChatMembers
+      (values {:member admin, :chat (first (vals chat))}))))
 
 ; Insert relationship in the database representing a new user
 ; in the specified group
@@ -44,6 +51,13 @@
 (defn add-message! [text group sender]
   (insert Messages
     (values {:text text, :chat group, :sender sender})))
+
+; Select chats from a user
+(defn select-chats [phone]
+  (let [user (:id (select-user-phone phone))]
+    (select ChatMembers
+      (with Chats)
+      (where {:member user}))))
 
 ; Select messages fron group
 (defn select-group [group order]

@@ -11,6 +11,9 @@
   (GET  "/"               []
        (c/global))
 
+  (GET  "/chats"          [phone]
+      (c/chats phone))
+
   (GET  "/sincronize/:chat" [chat order]
       (c/sinc-group chat order))
 
