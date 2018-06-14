@@ -9,8 +9,12 @@
 ;; Get chats from user
 (defn chats [phone]
   (apply str
-    (map #(str "" (:id %) ":" (:name %) "-")
-         (m/select-chats phone))))
+    (map #(str "" (:id %) ":" (:name %) "\n")
+         (m/select-chats! phone))))
+
+;; Get public key of user
+(defn pubkey-user [phone]
+  (:pubKey (m/select-user! phone)))
 
 ;; Create new user
 (defn new-user [uname phone pk]
@@ -24,8 +28,8 @@
 
 ;; Add new user to a certain group
 (defn user->group [group phone]
-  (and (m/add2group! group phone)
-       (str "Added " phone " to chat " group " without trouble!!\n")))
+  (and (some? m/select-user! phone) 
+       (m/add2group! group phone)))
 
 ;; Send a message to a group
 (defn message->group [text group sender]
@@ -33,4 +37,4 @@
 
 ;; Sincronize the group messages
 (defn sinc-group [id order]
-  (m/select-group id order))
+  (m/select-group! id order))

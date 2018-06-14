@@ -14,6 +14,9 @@
   (GET  "/chats"          [phone]
       (c/chats phone))
 
+  (GET  "/public-key" [phone]
+      ())
+
   (GET  "/sincronize/:chat" [chat order]
       (c/sinc-group chat order))
 
