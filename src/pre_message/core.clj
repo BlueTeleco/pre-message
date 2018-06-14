@@ -15,13 +15,13 @@
       (c/chats phone))
 
   (GET  "/public-key" [phone]
-      ())
+      (c/pubkey-user phone))
 
   (GET  "/sincronize/:chat" [chat order]
       (c/sinc-group chat order))
 
-  (POST "/add-user/:chat"   [chat phone]
-      (c/user->group chat phone))
+  (POST "/add-user/:chat"   [chat phone rk]
+      (c/user->group chat phone rk))
 
   (POST "/send/:chat"       [text group sender]
       (c/message->group text group sender))

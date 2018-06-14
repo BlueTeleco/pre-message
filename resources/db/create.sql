@@ -45,37 +45,12 @@ CREATE TABLE Messages (
 
 -- Fill the Users table with mock users
 INSERT INTO Users (id, name, phone) VALUES
-(1, "lucas", "111111111"),
-(2, "pablo", "123456789"),
-(3, "jania", "246813579"),
-(4, "jacobo", "987654321"),
-(5, "alda", "147258369");
-
--- Fill the ReEncryptionKeys table with mok keys
-INSERT INTO ReEncryptionKeys (delegator, delegatee) VALUES
-(1, 5),
-(2, 4),
-(5, 1),
-(3, 4);
+(1, "lucas", "000");
 
 -- Fill the Chats table with mok chats
 INSERT INTO Chats (id, admin, name) VALUES
-(1, 1, "club"),
-(2, 3, "familia");
+(1, 1, "Yope");
 
 -- Fill the ChatMembers table with mok chat members
 INSERT INTO ChatMembers (chat, member) VALUES
-(1, 1),
-(1, 5),
-(2, 1),
-(2, 2),
-(2, 3),
-(2, 4);
-
--- Fill the Messages table with mok messages
-INSERT INTO Messages (id, text, chat, sender) VALUES
-(1, "Hola mundo!", 1, 1),
-(2, "Adios mundo!", 1, 5),
-(3, "Hola family :D", 2, 2),
-(4, "Que tal?", 2, 1);
-
+(1, 1);

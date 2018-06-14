@@ -14,12 +14,11 @@
 
 ;; Get public key of user
 (defn pubkey-user [phone]
-  (:pubKey (m/select-user! phone)))
+  (str (:pubKey (m/select-user! phone))))
 
 ;; Create new user
 (defn new-user [uname phone pk]
-  (and (m/add-user! uname phone pk)
-       (str "New user!! Hello " uname "\n")))
+  (m/add-user! uname phone pk))
 
 ;; Create new group
 (defn new-group [admin gname]
@@ -27,9 +26,9 @@
        (str "New group!! " admin " is Admin\n")))
 
 ;; Add new user to a certain group
-(defn user->group [group phone]
-  (and (some? m/select-user! phone) 
-       (m/add2group! group phone)))
+(defn user->group [group phone rk]
+  (and (some? (m/select-user! phone))
+       (m/add2group! group phone rk)))
 
 ;; Send a message to a group
 (defn message->group [text group sender]
@@ -37,4 +36,4 @@
 
 ;; Sincronize the group messages
 (defn sinc-group [id order]
-  (m/select-group! id order))
+  (m/select-messages! id order))

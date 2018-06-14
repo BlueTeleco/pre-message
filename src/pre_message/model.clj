@@ -33,14 +33,11 @@
       (where {:member user}))))
 
 ; Select messages from group
-(defn select-group! [group order]
+(defn select-messages! [group order]
   (select Messages
     (where (and (= :chat group)
                 (> :id order)))))
 
-; Select public key from user
-(defn select-pubkey! [phone]
-  )
 ;;; Insert
 
 ; Insert new user in the database
@@ -58,10 +55,16 @@
 
 ; Insert relationship in the database representing a new user
 ; in the specified group
-(defn add2group! [group phone]
-  (let [user (:id (select-user! phone))]
-    (insert ChatMembers
-      (values {:member user, :chat group}))))
+(defn add2group! [group phone rk]
+  (let [user (:id (select-user! phone))
+        admin (:admin (first 
+                        (select Chats
+                          (where {:id group}))))]
+    (do
+      (insert ChatMembers
+        (values {:member user, :chat group}))
+      (insert ReEncryptionKeys
+        (values {:delegator admin, :delegatee user, :reKey rk})))))
 
 ; Insert message in the database
 (defn add-message! [text group sender]
