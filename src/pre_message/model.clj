@@ -32,6 +32,18 @@
       (with Chats)
       (where {:member user}))))
 
+; Select admin of chat
+(defn select-admin! [chat]
+  (:admin (first
+      (select Chats
+        (where {:id chat})))))
+
+; Select reencryption key of two users
+(defn select-rekey! [delegator delegatee]
+  (first
+    (select ReEncryptionKeys
+      (where {:delegator delegator, :delegatee delegatee}))))
+
 ; Select messages from group
 (defn select-messages! [group order]
   (select Messages

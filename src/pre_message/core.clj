@@ -23,8 +23,8 @@
   (POST "/add-user/:chat"   [chat phone rk]
       (c/user->group chat phone rk))
 
-  (POST "/send/:chat"       [text group sender]
-      (c/message->group text group sender))
+  (POST "/send/:chat"       [text chat phone]
+      (c/message->group text chat phone))
 
   (PUT  "/new-user"       [uname phone pk]
       (c/new-user uname phone pk))
