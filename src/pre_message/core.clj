@@ -8,14 +8,17 @@
 
 ; Define the server router
 (defroutes router
-  (GET  "/"               []
+  (GET  "/"                 []
        (c/global))
 
-  (GET  "/chats"          [phone]
+  (GET  "/chats"            [phone]
       (c/chats phone))
 
-  (GET  "/public-key" [phone]
+  (GET  "/public-key"       [phone]
       (c/pubkey-user phone))
+
+  (GET  "/rencryption-key"  [user1 user2]
+      (c/rekey-users user1 user2))
 
   (GET  "/sincronize/:chat" [chat order]
       (c/sinc-group chat order))
@@ -26,10 +29,10 @@
   (POST "/send/:chat"       [text chat phone]
       (c/message->group text chat phone))
 
-  (PUT  "/new-user"       [uname phone pk]
+  (PUT  "/new-user"         [uname phone pk]
       (c/new-user uname phone pk))
 
-  (PUT  "/new-group"      [admin-ph gname]
+  (PUT  "/new-group"        [admin-ph gname]
       (c/new-group admin-ph gname)))
 
 ; Wraps the router in the middleware that allows parameter destructuring

@@ -20,6 +20,13 @@
       :pubKey
       str))
 
+;; Get reencryption key between two users
+(defn rekey-users [user1 user2]
+  (and (not= user1 user2)
+       (-> (m/select-rekey! user1 user2)
+           :reKey
+           str)))
+
 ;; Create new user
 (defn new-user [uname phone pk]
   (m/add-user! uname phone pk))
