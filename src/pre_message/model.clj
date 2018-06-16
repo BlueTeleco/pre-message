@@ -19,6 +19,12 @@
 
 ;;; Select
 
+; Select user from their id
+(defn select-by-id! [id]
+  (first 
+    (select Users
+      (where {:id id}))))
+
 ; Select user from their phone
 (defn select-user! [phone]
   (first 
@@ -57,6 +63,11 @@
   (insert Users
     (values {:name uname, :phone phone, :pubkey pk})))
 
+; Insert new rekey in the database
+(defn add-rekey! [delegator delegatee rk]
+  (insert ReEncryptionKeys
+    (values {:delegator delegator, :delegatee delegatee, :reKey rk})))
+
 ; Insert new group in the database
 (defn add-group! [admin-ph gname]
   (let [admin (:id (select-user! admin-ph))
@@ -67,16 +78,13 @@
 
 ; Insert relationship in the database representing a new user
 ; in the specified group
-(defn add2group! [group phone rk]
+(defn add-to-group! [group phone rk]
   (let [user (:id (select-user! phone))
-        admin (:admin (first 
-                        (select Chats
-                          (where {:id group}))))]
+        admin (select-admin! group)]
     (do
       (insert ChatMembers
         (values {:member user, :chat group}))
-      (insert ReEncryptionKeys
-        (values {:delegator admin, :delegatee user, :reKey rk})))))
+      (add-rekey! admin user rk))))
 
 ; Insert message in the database
 (defn add-message! [text group sender]

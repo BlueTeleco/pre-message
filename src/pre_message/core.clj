@@ -8,32 +8,38 @@
 
 ; Define the server router
 (defroutes router
-  (GET  "/"                 []
+  (GET  "/"                              []
        (c/global))
 
-  (GET  "/chats"            [phone]
+  (GET  "/chats/:phone"                  [phone]
       (c/chats phone))
 
-  (GET  "/public-key"       [phone]
+  (GET  "/public-key/:phone"             [phone]
       (c/pubkey-user phone))
 
-  (GET  "/rencryption-key"  [user1 user2]
-      (c/rekey-users user1 user2))
+  (GET  "/pubkey-admin/:chat"            [chat]
+      (c/pubkey-admin chat))
 
-  (GET  "/sincronize/:chat" [chat order]
+  (GET  "/rencryption-key/:chat/:phone"  [phone chat]
+      (c/rekey-users phone chat))
+
+  (GET  "/sincronize/:chat"              [chat order]
       (c/sinc-group chat order))
 
-  (POST "/add-user/:chat"   [chat phone rk]
+  (POST "/add-user/:chat"                [chat phone rk]
       (c/user->group chat phone rk))
 
-  (POST "/send/:chat"       [text chat phone]
+  (POST "/send/:chat"                    [text chat phone]
       (c/message->group text chat phone))
 
-  (PUT  "/new-user"         [uname phone pk]
+  (PUT  "/new-user"                      [uname phone pk]
       (c/new-user uname phone pk))
 
-  (PUT  "/new-group"        [admin-ph gname]
-      (c/new-group admin-ph gname)))
+  (PUT  "/new-group"                     [admin-ph gname]
+      (c/new-group admin-ph gname))
+
+  (PUT  "/new-rekey"                     [phone chat rk]
+      (c/new-rekey phone chat rk)))
 
 ; Wraps the router in the middleware that allows parameter destructuring
 (def app (wrap-params router))

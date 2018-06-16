@@ -20,12 +20,23 @@
       :pubKey
       str))
 
-;; Get reencryption key between two users
-(defn rekey-users [user1 user2]
-  (and (not= user1 user2)
-       (-> (m/select-rekey! user1 user2)
+;; Get public key of admin
+(defn pubkey-admin [chat]
+  (-> phone
+      m/select-admin!
+      m/select-by-id!
+      :pubKey
+      str))
+
+;; Get reencryption key between a user and the
+;; admin of a chat
+(defn rekey-users [phone chat]
+  (let [admin (m/select-admin! chat)
+        user (:id (m/select-user! phone))]
+    (and (not= user admin)
+       (-> (m/select-rekey! user admin)
            :reKey
-           str)))
+           str))))
 
 ;; Create new user
 (defn new-user [uname phone pk]
@@ -35,10 +46,16 @@
 (defn new-group [admin gname]
   (m/add-group! admin gname))
 
+;; Create new reencryption key
+(defn new-rekey [phone chat rk]
+  (let [user (select-user! phone)
+        admin (select-admin! chat)]
+    (add-rekey! user admin rk)))
+
 ;; Add new user to a certain group
 (defn user->group [group phone rk]
   (and (some? (m/select-user! phone))
-       (m/add2group! group phone rk)))
+       (m/add-to-group! group phone rk)))
 
 ;; Send a message to a group
 (defn message->group [text group phone]
