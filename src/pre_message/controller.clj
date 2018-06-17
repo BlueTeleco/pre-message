@@ -7,6 +7,24 @@
 (defn global []
   afgh/global-str)
 
+;; Utils
+
+; Decode Base64 string to byte array
+(defn decode [encoded]
+  (doto (Base64/getDecoder)
+        (.decode encoded)))
+
+; Encode Base64 string to byte array
+(defn encode [byte-arr]
+  (doto (Base64/getEncoder)
+        (.encodeToString byte-arr)))
+
+; Reencrypt a message in Base64 representation
+(defn reencrypt [message rk]
+  (-> message
+      (afgh/reencrypt (decode rk))
+      encode))
+
 ;; Get chats from user
 (defn chats [phone]
   (->> (m/select-chats! phone)
@@ -71,21 +89,3 @@
 ;; Sincronize the group messages
 (defn sinc-group [id order]
   (m/select-messages! id order))
-
-;; Utils
-
-; Decode Base64 string to byte array
-(defn decode [encoded]
-  (doto (Base64/getDecoder)
-        (.decode encoded)))
-
-; Encode Base64 string to byte array
-(defn encode [byte-arr]
-  (doto (Base64/getEncoder)
-        (.encodeToString byte-arr)))
-
-; Reencrypt a message in Base64 representation
-(defn reencrypt [message rk]
-  (-> message
-      (afgh/reencrypt (decode rk))
-      encode))
