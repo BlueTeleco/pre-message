@@ -23,8 +23,8 @@
   (GET  "/rencryption-key/:chat/:phone"  [phone chat]
       (c/rekey-users phone chat))
 
-  (GET  "/sincronize/:chat"              [chat order]
-      (c/sinc-group chat order))
+  (GET  "/sincronize/:chat/:phone"       [chat phone order]
+      (c/sinc-group chat phone order))
 
   (POST "/add-user/:chat"                [chat phone rk]
       (c/user->group chat phone rk))

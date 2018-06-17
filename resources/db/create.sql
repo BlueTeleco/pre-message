@@ -37,7 +37,7 @@ CREATE TABLE Messages (
 	id			INTEGER,
 	text		VARCHAR(255),
 	chat		INTEGER,
-	sender		INTEGER,
+	sender	INTEGER,
 	PRIMARY KEY (id)
 	FOREIGN KEY (chat) 	 REFERENCES Chats(id)
 	FOREIGN KEY (sender) REFERENCES Users(id)
