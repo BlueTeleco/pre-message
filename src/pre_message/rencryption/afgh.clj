@@ -16,5 +16,4 @@
 
 ;; Re-encryption function.
 (defn reencrypt [c rk]
-  (let [e-ppp (.. global getE (pairing rk))]
-  (AFGHProxyReEncryption/reEncryption c rk e-ppp)))
+  (AFGHProxyReEncryption/reEncryption c rk global))

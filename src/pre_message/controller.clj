@@ -22,7 +22,7 @@
 
 ;; Get public key of admin
 (defn pubkey-admin [chat]
-  (-> phone
+  (-> chat
       m/select-admin!
       m/select-by-id!
       :pubKey
@@ -33,10 +33,12 @@
 (defn rekey-users [phone chat]
   (let [admin (m/select-admin! chat)
         user (:id (m/select-user! phone))]
-    (and (not= user admin)
-       (-> (m/select-rekey! user admin)
-           :reKey
-           str))))
+    (if (not= user admin)
+      (and (not= user admin)
+        (-> (m/select-rekey! user admin)
+            :reKey
+            str))
+      (str ""))))
 
 ;; Create new user
 (defn new-user [uname phone pk]
@@ -48,9 +50,9 @@
 
 ;; Create new reencryption key
 (defn new-rekey [phone chat rk]
-  (let [user (select-user! phone)
-        admin (select-admin! chat)]
-    (add-rekey! user admin rk)))
+  (let [user (m/select-user! phone)
+        admin (m/select-admin! chat)]
+    (m/add-rekey! user admin rk)))
 
 ;; Add new user to a certain group
 (defn user->group [group phone rk]
@@ -60,11 +62,11 @@
 ;; Send a message to a group
 (defn message->group [text group phone]
   (let [admin (m/select-admin! group)
-        sender (m/select-user! phone)
+        sender (:id (m/select-user! phone))
         rk (m/select-rekey! sender admin)]
-    (do
-      ()
-      (m/add-message! text group sender))))
+      (-> text
+          (reencrypt rk)
+          (m/add-message! group sender))))
 
 ;; Sincronize the group messages
 (defn sinc-group [id order]
@@ -81,3 +83,9 @@
 (defn encode [byte-arr]
   (doto (Base64/getEncoder)
         (.encodeToString byte-arr)))
+
+; Reencrypt a message in Base64 representation
+(defn reencrypt [message rk]
+  (-> message
+      (afgh/reencrypt (decode rk))
+      encode))
