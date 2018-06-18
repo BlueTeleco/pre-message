@@ -74,7 +74,7 @@
     (->> (m/select-messages! chat order)
          (map #(str ""  (:name (m/select-by-id! (:sender %))) 
                     ":" (recrypt-necessary (:text %) (m/select-rekey! admin user)) 
-                    "\n"))
+                    "<--->"))
          (apply str))))
 
 ;; Add new user to a certain group
