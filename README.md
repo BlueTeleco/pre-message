@@ -14,21 +14,11 @@ lein uberjar
 
 ## Usage
 
-After compilation the project will be compiled in the target directory. To run use the java runtime environment. Java should be 9 or greater. It is necessary to add the `java.xml.bind` module.
+After compilation the project will be found in the target directory. To run use the java runtime environment. Java should be 9 or greater. It is necessary to add the `java.xml.bind` module.
 
     $ java --add-modules java.xml.bind -jar target/uberjar/pre-message-0.1.0-standalone.jar [args]
 
-## Options
-
-...
-
-## Examples
-
-...
-
-### Bugs
-
-...
+It will open the server in the 8080 port.
 
 ## License
 
