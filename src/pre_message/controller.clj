@@ -1,32 +1,6 @@
 (ns pre-message.controller
-  (:import (java.util Base64))
   (:require [pre-message.rencryption.afgh :as afgh]
             [pre-message.model :as m]))
-
-;; Utils
-
-; Decode Base64 string to byte array
-(defn decode [encoded]
-  (.decode (Base64/getDecoder) encoded))
-
-; Encode Base64 string to byte array
-(defn encode [byte-arr]
-  (.encodeToString (Base64/getEncoder) byte-arr))
-
-; Reencrypt a message in Base64 representation
-(defn reencrypt [message rk]
-  (-> message
-      decode
-      (afgh/reencrypt (decode rk))
-      encode))
-
-; Reencrypt only if necessary
-(defn recrypt-necessary [text rk]
-  (if (some? rk)
-    (reencrypt text rk)
-    text))
-
-;;;; Controllers
 
 ;; Get global variables
 (defn global []
@@ -61,10 +35,9 @@
   (let [admin (m/select-admin! chat)
         user (:id (m/select-user! phone))]
     (if (not= user admin)
-      (and (not= user admin)
-        (-> (m/select-rekey! user admin)
-            :reKey
-            str))
+      (-> (m/select-rekey! user admin)
+          :reKey
+          str)
       (str ""))))
 
 ;; Sincronize the group messages
@@ -73,7 +46,7 @@
         admin (m/select-admin! chat)]
     (->> (m/select-messages! chat order)
          (map #(str ""  (:name (m/select-by-id! (:sender %))) 
-                    ":" (recrypt-necessary (:text %) (m/select-rekey! admin user)) 
+                    ":" (afgh/recrypt-necessary (:text %) (m/select-rekey! admin user)) 
                     "<--->"))
          (apply str))))
 
@@ -88,7 +61,7 @@
         sender (:id (m/select-user! phone))
         rk (m/select-rekey! sender admin)]
       (-> text
-          (recrypt-necessary rk)
+          (afgh/recrypt-necessary rk)
           (m/add-message! group sender))))
 
 ;; Create new user

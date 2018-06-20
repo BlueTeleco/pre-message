@@ -1,7 +1,9 @@
 (ns pre-message.core-test
   (:require [clojure.test :refer :all]
+            [ring.mock :refer [request]]
             [pre-message.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest app-test
+  (testing "global route"
+    (let []
+      )))

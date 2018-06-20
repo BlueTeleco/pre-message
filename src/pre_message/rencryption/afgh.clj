@@ -1,4 +1,5 @@
 (ns pre-message.rencryption.afgh
+  (:import (java.util Base64))
   (:import (nics.crypto.proxy.afgh AFGHGlobalParameters AFGHProxyReEncryption)))
 
 (def rBits 256)
@@ -15,5 +16,26 @@
 (time (def global (AFGHGlobalParameters. global-str)))
 
 ;; Re-encryption function.
-(defn reencrypt [c rk]
+(defn afgh-reencrypt [c rk]
   (AFGHProxyReEncryption/reEncryption c rk global))
+
+; Decode Base64 string to byte array
+(defn decode [encoded]
+  (.decode (Base64/getDecoder) encoded))
+
+; Encode Base64 string to byte array
+(defn encode [byte-arr]
+  (.encodeToString (Base64/getEncoder) byte-arr))
+
+; Reencrypt a message in Base64 representation
+(defn reencrypt [message rk]
+  (-> message
+      decode
+      (afgh-reencrypt (decode rk))
+      encode))
+
+; Reencrypt only if necessary
+(defn recrypt-necessary [text rk]
+  (if (some? rk)
+    (reencrypt text rk)
+    text))
