@@ -43,12 +43,15 @@
 ;; Sincronize the group messages
 (defn sinc-group [chat phone order]
   (let [user (:id (m/select-user! phone))
-        admin (m/select-admin! chat)]
+        admin (m/select-admin! chat)
+        admin-s (str (:name (m/select-by-id! admin)) "<--->")
+        rk (m/select-rekey! admin user)]
     (->> (m/select-messages! chat order)
          (map #(str ""  (:name (m/select-by-id! (:sender %))) 
-                    ":" (afgh/recrypt-necessary (:text %) (m/select-rekey! admin user)) 
+                    ":" (afgh/recrypt-necessary (:text %) (:reKey rk)) 
                     "<--->"))
-         (apply str))))
+         (apply str)
+         (str admin-s))))
 
 ;; Add new user to a certain group
 (defn user->group [group phone rk]
