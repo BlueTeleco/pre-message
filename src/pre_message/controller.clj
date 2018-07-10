@@ -38,7 +38,7 @@
       (-> (m/select-rekey! user admin)
           :reKey
           str)
-      (str ""))))
+      "")))
 
 ;; Sincronize the group messages
 (defn sinc-group [chat phone order]
@@ -64,7 +64,7 @@
         sender (:id (m/select-user! phone))
         rk (m/select-rekey! sender admin)]
       (-> text
-          (afgh/recrypt-necessary rk)
+          (afgh/recrypt-necessary (:reKey rk))
           (m/add-message! group sender))))
 
 ;; Create new user

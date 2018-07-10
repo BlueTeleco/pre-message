@@ -22,10 +22,7 @@
 
 ; Decode Base64 string to byte array
 (defn decode [encoded]
-  (as-> encoded e
-        (split e #"\n")
-        (apply str e)
-        (.decode (Base64/getDecoder) e)))
+  (.decode (Base64/getDecoder) encoded))
 
 ; Encode Base64 string to byte array
 (defn encode [byte-arr]
